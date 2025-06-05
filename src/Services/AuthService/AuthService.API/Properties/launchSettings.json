@@ -1,0 +1,43 @@
+{
+  "profiles": {
+    "AuthService": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "Jwt__Secret": "YourVeryLongSecretKeyHere1234567890",
+        "Jwt__ExpiryMinutes": "60",
+        "Jwt__RefreshTokenExpiryDays": "7",
+        "ConnectionStrings__DefaultConnection": "Data Source=nhtrung;Initial Catalog=FoodDeliverySystem_Auth;Integrated Security=True;Encrypt=False;TrustServerCertificate=True",
+        "GoogleOAuth__ClientId": "your-google-client-id",
+        "GoogleOAuth__ClientSecret": "your-google-client-secret",
+        "GoogleOAuth__RedirectUri": "https://localhost:5001/api/auth/google-callback"
+      },
+      "dotnetRunMessages": true,
+      "applicationUrl": "https://localhost:5001"
+    },
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "Jwt__Secret": "YourVeryLongSecretKeyHere1234567890",
+        "Jwt__ExpiryMinutes": "60",
+        "Jwt__RefreshTokenExpiryDays": "7",
+        "ConnectionStrings__DefaultConnection": "Data Source=nhtrung;Initial Catalog=FoodDeliverySystem_Auth;Integrated Security=True;Encrypt=False;TrustServerCertificate=True",
+        "GoogleOAuth__ClientId": "your-google-client-id",
+        "GoogleOAuth__ClientSecret": "your-google-client-secret",
+        "GoogleOAuth__RedirectUri": "https://localhost:5001/api/auth/google-callback"
+      }
+    }
+  },
+  "$schema": "https://json.schemastore.org/launchsettings.json",
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:53522/",
+      "sslPort": 44393
+    }
+  }
+}
