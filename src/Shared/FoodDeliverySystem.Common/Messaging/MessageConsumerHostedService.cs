@@ -1,5 +1,5 @@
 ﻿using FoodDeliverySystem.Common.Messaging.Interfaces;
-using FoodDeliverySystem.Common.Messaging.Services;
+using FoodDeliverySystem.Common.Messaging.Implementations;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 

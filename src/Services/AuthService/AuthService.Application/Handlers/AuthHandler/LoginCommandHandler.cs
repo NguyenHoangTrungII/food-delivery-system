@@ -90,7 +90,7 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, ApiResponseWith
                 .SelectMany(ur => ur.Role.RolePermissions)
                 .Where(rp => rp.Allowed && rp.FunctionAction != null)
                 .ToDictionary(
-                    rp => rp.FunctionAction.CodeName, // ✅ dùng FunctionAction.CodeName
+                    rp => rp.FunctionAction.CodeName, 
                     rp => rp.Allowed);
 
             await _permissionCacheService.HashSetAsync(

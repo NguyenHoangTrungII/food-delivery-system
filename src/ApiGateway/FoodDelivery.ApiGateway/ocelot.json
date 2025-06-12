@@ -30,9 +30,9 @@
       "UpstreamPathTemplate": "/api/google-oauth/{everything}",
       "UpstreamHttpMethod": [ "GET" ]
     },
-    // Định tuyến cho BranchService
+    // Định tuyến 
     {
-      "DownstreamPathTemplate": "/api/branches/{everything}",
+      "DownstreamPathTemplate": "/api/userprofiles/{everything}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -40,10 +40,10 @@
           "Port": 5002
         }
       ],
-      "UpstreamPathTemplate": "/api/branches/{everything}",
+      "UpstreamPathTemplate": "/api/userprofiles/{everything}",
       "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
       "AuthenticationOptions": {
-        "AuthenticationProviderKey": "JwtBearer",
+        //"AuthenticationProviderKey": "JwtBearer",
         "AllowedScopes": []
       }
     },

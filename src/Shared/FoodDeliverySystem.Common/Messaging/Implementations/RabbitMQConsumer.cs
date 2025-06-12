@@ -7,8 +7,9 @@ using Polly;
 using Polly.Retry;
 using FoodDeliverySystem.Common.Logging;
 using FoodDeliverySystem.Common.Messaging.Interfaces;
+using Microsoft.Extensions.Options;
 
-namespace FoodDeliverySystem.Common.Messaging.Services;
+namespace FoodDeliverySystem.Common.Messaging.Implementations;
 
 public class RabbitMQConsumer<T> : IMessageConsumer, IDisposable
 {
@@ -19,13 +20,32 @@ public class RabbitMQConsumer<T> : IMessageConsumer, IDisposable
     private readonly IModel _channel;
     private readonly AsyncRetryPolicy _retryPolicy;
 
+    //public RabbitMQConsumer(
+    //    IMessageHandler<T> messageHandler,
+    //    MessageQueueConfig config,
+    //    ILoggerAdapter<RabbitMQConsumer<T>> logger)
+    //{
+    //    _messageHandler = messageHandler ?? throw new ArgumentNullException(nameof(messageHandler));
+    //    _config = config ?? throw new ArgumentNullException(nameof(config));
+    //    _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+
+    //    var factory = new ConnectionFactory { HostName = _config.HostName, AutomaticRecoveryEnabled = true };
+    //    _connection = factory.CreateConnection();
+    //    _channel = _connection.CreateModel();
+
+    //    _retryPolicy = Policy
+    //        .Handle<Exception>()
+    //        .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)),
+    //            (ex, time) => _logger.LogWarning("Retry after {TimeSpan} due to {Exception}", time, ex.Message));
+    //}
+
     public RabbitMQConsumer(
-        IMessageHandler<T> messageHandler,
-        MessageQueueConfig config,
-        ILoggerAdapter<RabbitMQConsumer<T>> logger)
+    IMessageHandler<T> messageHandler,
+    IOptions<MessageQueueConfig> options,
+    ILoggerAdapter<RabbitMQConsumer<T>> logger)
     {
         _messageHandler = messageHandler ?? throw new ArgumentNullException(nameof(messageHandler));
-        _config = config ?? throw new ArgumentNullException(nameof(config));
+        _config = options?.Value ?? throw new ArgumentNullException(nameof(options));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
         var factory = new ConnectionFactory { HostName = _config.HostName, AutomaticRecoveryEnabled = true };

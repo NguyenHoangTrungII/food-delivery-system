@@ -1,4 +1,6 @@
-﻿namespace FoodDeliverySystem.Common.ApiResponse.Models;
+﻿using System.Text.Json.Serialization;
+
+namespace FoodDeliverySystem.Common.ApiResponse.Models;
 
 public class ApiResponseWithData<T> : ApiResponse
 {
@@ -9,4 +11,10 @@ public class ApiResponseWithData<T> : ApiResponse
     {
         Data = data;
     }
+
+    public ApiResponseWithData()
+       : base()
+    {
+    }
+
 }

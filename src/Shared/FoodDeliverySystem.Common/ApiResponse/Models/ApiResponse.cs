@@ -8,6 +8,13 @@ public abstract class ApiResponse:  IApiResponse
     public string Message { get; set; }
     public string Timestamp { get; set; }
     public IReadOnlyList<ErrorDetail> Errors { get; set; }
+    public ApiResponse() {
+        Status = string.Empty;
+        Message = string.Empty;
+        Timestamp = DateTime.UtcNow.ToString("O");
+        Errors = Array.Empty<ErrorDetail>().AsReadOnly();
+    }
+
 
     protected ApiResponse(string status, string message, IEnumerable<ErrorDetail>? errors = null)
     {

@@ -14,10 +14,16 @@ using FoodDeliverySystem.Common.Messaging.Configuration;
 using FoodDeliverySystem.Common.Messaging.Implementations;
 using FoodDeliverySystem.Common.Messaging.Interfaces;
 using FoodDeliverySystem.Common.Messaging.Models;
-using FoodDeliverySystem.Common.Messaging.Services;
+using FoodDeliverySystem.Common.ServiceClient.Interfaces;
+using FoodDeliverySystem.Common.ServiceClient.Implementations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using StackExchange.Redis;
+using FoodDeliverySystem.Common.ServiceClient.Configuration;
+using Polly.Extensions.Http;
+using Polly;
+using Microsoft.Extensions.Options;
+
 
 namespace FoodDeliverySystem.Common;
 
@@ -56,6 +62,31 @@ public static class DependencyInjection
         services.AddSingleton<IMessageHandler<PermissionChangeMessage>, PermissionChangeMessageHandler>();
         services.AddSingleton<IMessageConsumer, RabbitMQConsumer<PermissionChangeMessage>>();
         services.AddHostedService<MessageConsumerHostedService<PermissionChangeMessage>>();
+
+        // Bind cấu hình từ section ApiGateway
+        services.Configure<ServiceClientConfig>(configuration.GetSection("ApiGateway"));
+
+        services.Configure<ServiceClientConfig>(configuration.GetSection("ApiGateway"));
+
+        services.AddHttpContextAccessor();
+
+
+
+        services.AddHttpClient("ServiceClientBase") // chỉ để tạo HttpClient, không gắn với typed client
+            .AddPolicyHandler((provider, _) =>
+            {
+                var config = provider.GetRequiredService<IConfiguration>();
+                return HttpPolicyExtensions
+                    .HandleTransientHttpError()
+                    .WaitAndRetryAsync(
+                        retryCount: config.GetValue<int>("ApiGateway:MaxRetryAttempts"),
+                        sleepDurationProvider: attempt =>
+                            TimeSpan.FromMilliseconds(config.GetValue<int>("ApiGateway:RetryDelayMilliseconds") * attempt));
+            });
+
+        services.AddTransient<IServiceClient, FoodDeliverySystem.Common.ServiceClient.Implementations.ServiceClient>();
+
+
 
 
         return services;

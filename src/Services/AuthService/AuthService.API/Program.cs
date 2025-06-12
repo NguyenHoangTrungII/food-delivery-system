@@ -18,6 +18,8 @@ using FoodDeliverySystem.Common.Authorization.Middlewares;
 using FoodDeliverySystem.Common.Caching;
 using FoodDeliverySystem.Common;
 using AuthService.Application.Services.Auth;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -52,6 +54,9 @@ builder.Services.Scan(scan => scan
 
 
 builder.Services.AddCommonServices(builder.Configuration);
+builder.Services.AddSingleton<PermissionChangePublisher>();
+
+
 
 
 
@@ -73,7 +78,7 @@ builder.Services.AddCommonMediatRAndValidation(typeof(Program).Assembly);
 // Add Authentication with JWT
 var jwtSecret = builder.Configuration["Jwt:Secret"];
 var key = Encoding.UTF8.GetBytes(jwtSecret);
-
+JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // 👈 xóa mặc định
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -87,9 +92,27 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        ValidIssuer = "AuthService",
+        //ValidIssuer = "AuthService",
+        ValidIssuer = "FoodDeliverySystem",
         ValidAudience = "FoodDeliverySystem",
+        NameClaimType = ClaimTypes.NameIdentifier, 
         IssuerSigningKey = new SymmetricSecurityKey(key)
+    };
+
+
+    // Bắt lỗi và in ra lý do
+    options.Events = new JwtBearerEvents
+    {
+        OnAuthenticationFailed = context =>
+        {
+            Console.WriteLine($"❌ Token authentication failed: {context.Exception.Message}");
+            return Task.CompletedTask;
+        },
+        OnTokenValidated = context =>
+        {
+            Console.WriteLine("✅ Token validated successfully");
+            return Task.CompletedTask;
+        }
     };
 });
 
@@ -140,7 +163,6 @@ app.UseSwaggerUI(c =>
     c.RoutePrefix = string.Empty; // Truy cập Swagger tại root (http://localhost:5001/)
 });
 
-builder.Services.AddSingleton<PermissionChangePublisher>();
 
 app.UseAuthentication();
 app.UseServiceAuthorization();

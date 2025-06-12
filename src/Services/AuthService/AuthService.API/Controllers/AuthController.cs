@@ -43,6 +43,7 @@ public class AuthController : BaseApiController
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    //[RequiredPermission("CREATE_ORDER")]
 
     public async Task<IActionResult> Register([FromBody] RegisterRequestDto request)
     {

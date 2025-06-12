@@ -4,4 +4,4 @@ using AuthService.Application.Dtos;
 
 namespace AuthService.Application.Commands.Auth;
 
-public record RegisterCommand(string Username, string Email, string Password) : IRequest<ApiResponseWithData<UserDto>>;
+public record RegisterCommand(string Username, string Email, string Password) : IRequest<ApiResponseWithData<RegisterResponseDto>>;

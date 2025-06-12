@@ -2,7 +2,7 @@
 using FoodDeliverySystem.Common.Logging;
 using FoodDeliverySystem.Common.Messaging.Interfaces;
 using FoodDeliverySystem.Common.Messaging.Models;
-using FoodDeliverySystem.Common.Messaging.Services;
+using FoodDeliverySystem.Common.Messaging.Implementations;
 
 namespace FoodDeliverySystem.Common.Messaging;
 

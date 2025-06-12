@@ -12,4 +12,5 @@ public interface IResponseFactory<T>
     ApiResponseWithData<T> NotFound(string message = "Resource not found.", IEnumerable<ErrorDetail>? errors = null);
     ApiResponseWithData<T> InternalServerError(string message = "An unexpected error occurred.", IEnumerable<ErrorDetail>? errors = null);
     ApiResponseWithData<T> ValidationError(IEnumerable<ErrorDetail> errors, string message = "Validation failed.");
+
 }

@@ -37,6 +37,13 @@ public class ServiceAuthorizationMiddleware
                 var userIdClaim = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 if (string.IsNullOrEmpty(userIdClaim) || !Guid.TryParse(userIdClaim, out userId))
                 {
+
+                    Console.WriteLine("❌ Không lấy được userId từ token.");
+                    foreach (var claim in context.User.Claims)
+                    {
+                        Console.WriteLine($"Claim: {claim.Type} = {claim.Value}");
+                    }
+
                     context.Response.StatusCode = StatusCodes.Status401Unauthorized;
                     var response = ResponseFactory<object>.Unauthorized("Unauthorized: Invalid or missing user ID.");
                     await context.Response.WriteAsync(JsonSerializer.Serialize(response));
