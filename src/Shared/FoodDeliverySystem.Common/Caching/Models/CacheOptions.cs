@@ -23,5 +23,7 @@ public class CacheOptions
     public TimeSpan BranchTTL { get; set; } = TimeSpan.FromHours(24);
     public TimeSpan CartTTL { get; set; } = TimeSpan.FromHours(24);
     public TimeSpan DefaultTTL { get; set; } = TimeSpan.FromHours(1);
+    public TimeSpan GeoDistanceTTL { get; set; } = TimeSpan.FromMinutes(30); // TTL cho GeoDistance
+
 
 }
