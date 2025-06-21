@@ -14,4 +14,9 @@ public interface IGenericRepository
         Expression<Func<T, bool>> predicate,
         Func<IQueryable<T>, IQueryable<T>>? include = null,
         CancellationToken cancellationToken = default) where T : class;
+
+    Task<List<T>> FindAsync<T>(
+    Expression<Func<T, bool>> predicate,
+    CancellationToken cancellationToken = default) where T : class;
+
 }

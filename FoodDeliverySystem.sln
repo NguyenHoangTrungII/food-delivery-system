@@ -39,6 +39,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserProfileService.API", "s
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoodDeliverySystem.DAL", "src\Shared\FoodDeliverySystem.DAL\FoodDeliverySystem.DAL.csproj", "{C90E4541-2075-4249-8164-330263F23CB3}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RestaurantService", "RestaurantService", "{C6A5E87D-A088-4598-A347-D8A6E47877A7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestaurantService.Domain", "src\Services\RestaurantService\RestaurantService.Domain\RestaurantService.Domain.csproj", "{7003A959-5EA7-4746-A032-219F4490D64C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestaurantService.Application", "src\Services\RestaurantService\RestaurantService.Application\RestaurantService.Application.csproj", "{107A1EB4-2CF9-415C-A4B1-C1413660A29B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestaurantService.Infrastructure", "src\Services\RestaurantService\RestaurantService.Infrastructure\RestaurantService.Infrastructure.csproj", "{328D3249-E1B9-479A-8FE8-C6127FA2665D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestaurantService.API", "src\Services\RestaurantService\RestaurantService.WebAPI\RestaurantService.API.csproj", "{3A9CFF8F-02DE-4937-ADDB-0BB5FAFAA8E1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -93,6 +103,22 @@ Global
 		{C90E4541-2075-4249-8164-330263F23CB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C90E4541-2075-4249-8164-330263F23CB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C90E4541-2075-4249-8164-330263F23CB3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7003A959-5EA7-4746-A032-219F4490D64C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7003A959-5EA7-4746-A032-219F4490D64C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7003A959-5EA7-4746-A032-219F4490D64C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7003A959-5EA7-4746-A032-219F4490D64C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{107A1EB4-2CF9-415C-A4B1-C1413660A29B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{107A1EB4-2CF9-415C-A4B1-C1413660A29B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{107A1EB4-2CF9-415C-A4B1-C1413660A29B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{107A1EB4-2CF9-415C-A4B1-C1413660A29B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{328D3249-E1B9-479A-8FE8-C6127FA2665D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{328D3249-E1B9-479A-8FE8-C6127FA2665D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{328D3249-E1B9-479A-8FE8-C6127FA2665D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{328D3249-E1B9-479A-8FE8-C6127FA2665D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A9CFF8F-02DE-4937-ADDB-0BB5FAFAA8E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A9CFF8F-02DE-4937-ADDB-0BB5FAFAA8E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A9CFF8F-02DE-4937-ADDB-0BB5FAFAA8E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A9CFF8F-02DE-4937-ADDB-0BB5FAFAA8E1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -115,5 +141,10 @@ Global
 		{06C1617E-63E1-4809-9122-99F770CDE56F} = {324DDACF-6732-491C-8C1A-BF9329BC11BF}
 		{111519E6-A67B-42CF-A68C-EF0EEDB1270B} = {324DDACF-6732-491C-8C1A-BF9329BC11BF}
 		{C90E4541-2075-4249-8164-330263F23CB3} = {954FB143-E4F4-4B90-BCE4-177BE81A95D3}
+		{C6A5E87D-A088-4598-A347-D8A6E47877A7} = {C7352D30-490A-49C8-B3B5-E3D840C66ABB}
+		{7003A959-5EA7-4746-A032-219F4490D64C} = {C6A5E87D-A088-4598-A347-D8A6E47877A7}
+		{107A1EB4-2CF9-415C-A4B1-C1413660A29B} = {C6A5E87D-A088-4598-A347-D8A6E47877A7}
+		{328D3249-E1B9-479A-8FE8-C6127FA2665D} = {C6A5E87D-A088-4598-A347-D8A6E47877A7}
+		{3A9CFF8F-02DE-4937-ADDB-0BB5FAFAA8E1} = {C6A5E87D-A088-4598-A347-D8A6E47877A7}
 	EndGlobalSection
 EndGlobal

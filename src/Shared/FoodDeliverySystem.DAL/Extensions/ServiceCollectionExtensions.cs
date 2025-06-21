@@ -34,8 +34,14 @@ public static class ServiceCollectionExtensions
                 //        opt => opt.EnableRetryOnFailure(dbConfig.MaxRetryAttempts));
                 //    break;
                 case "postgresql":
-                    options.UseNpgsql(dbConfig.ConnectionString,
-                        opt => opt.EnableRetryOnFailure(dbConfig.MaxRetryAttempts));
+                    //options.UseNpgsql(dbConfig.ConnectionString,
+                    //    opt => opt.EnableRetryOnFailure(dbConfig.MaxRetryAttempts));
+                    options.UseNpgsql(dbConfig.ConnectionString, npgsqlOptions =>
+                    {
+                        npgsqlOptions.EnableRetryOnFailure(dbConfig.MaxRetryAttempts);
+                        npgsqlOptions.UseNetTopologySuite(); // Thêm hỗ trợ PostGIS
+                    });
+
                     break;
                 case "sqlserver":
                     options.UseSqlServer(dbConfig.ConnectionString,

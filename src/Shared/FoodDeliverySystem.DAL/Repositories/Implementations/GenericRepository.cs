@@ -103,4 +103,12 @@ public class GenericRepository : IGenericRepository
         }
         return await query.FirstOrDefaultAsync(predicate, cancellationToken);
     }
+
+    public async Task<List<T>> FindAsync<T>(
+    Expression<Func<T, bool>> predicate,
+    CancellationToken cancellationToken = default) where T : class
+    {
+        return await _dbContext.Set<T>().Where(predicate).ToListAsync(cancellationToken);
+    }
+
 }

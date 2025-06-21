@@ -1,3 +1,6 @@
 ﻿Add-Migration UpdateTokenResetPassword_Table -OutputDir Migrations
 Update-Database
 Remove-Migration
+
+
+Add-Migration InitialCreate -OutputDir Migrations

@@ -3,6 +3,7 @@ using MongoDB.Driver.GeoJsonObjectModel;
 using Microsoft.Extensions.Logging;
 using FoodDeliverySystem.Common.Geo.Interfaces;
 using FoodDeliverySystem.Common.Geo.Models;
+using System.Threading;
 
 namespace FoodDeliverySystem.Common.Geo.Implementations;
 
@@ -17,11 +18,12 @@ public class MongoGeoDistanceCalculator<T> : IGeoDistanceCalculator where T : cl
         _logger = logger;
     }
 
-    public async Task<double> CalculateDistanceAsync(double lat1, double lon1, double lat2, double lon2, GeoUnit unit = GeoUnit.Kilometers)
+    public async Task<double> CalculateDistanceAsync(double lat1, double lon1, double lat2, double lon2, GeoUnit unit = GeoUnit.Kilometers, CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Calculating distance with MongoDB for ({Lat1}, {Lon1}) to ({Lat2}, {Lon2})", lat1, lon1, lat2, lon2);
         try
         {
+            cancellationToken.ThrowIfCancellationRequested();
             ValidateCoordinates(lat1, lon1);
             ValidateCoordinates(lat2, lon2);
 
@@ -36,7 +38,7 @@ public class MongoGeoDistanceCalculator<T> : IGeoDistanceCalculator where T : cl
 
             var result = await _collection.Aggregate()
                 .GeoNear<T, GeoJson2DGeographicCoordinates, T>(point1, geoNearOptions)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(cancellationToken);
 
             var distanceInMeters = result?.Distance ?? throw new InvalidOperationException("Cannot calculate distance.");
 
@@ -47,6 +49,11 @@ public class MongoGeoDistanceCalculator<T> : IGeoDistanceCalculator where T : cl
                 _ => distanceInMeters
             };
         }
+        catch (OperationCanceledException)
+        {
+            _logger.LogInformation("Operation canceled for distance calculation ({Lat1}, {Lon1}) to ({Lat2}, {Lon2})", lat1, lon1, lat2, lon2);
+            throw;
+        }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error calculating distance for ({Lat1}, {Lon1}) to ({Lat2}, {Lon2})", lat1, lon1, lat2, lon2);
@@ -54,27 +61,29 @@ public class MongoGeoDistanceCalculator<T> : IGeoDistanceCalculator where T : cl
         }
     }
 
-    public async Task<bool> IsWithinRadiusAsync(double lat1, double lon1, double lat2, double lon2, double radius, GeoUnit unit = GeoUnit.Kilometers)
+    public async Task<bool> IsWithinRadiusAsync(double lat1, double lon1, double lat2, double lon2, double radius, GeoUnit unit = GeoUnit.Kilometers, CancellationToken cancellationToken = default)
     {
-        var distance = await CalculateDistanceAsync(lat1, lon1, lat2, lon2, unit);
+        var distance = await CalculateDistanceAsync(lat1, lon1, lat2, lon2, unit, cancellationToken);
         return distance <= radius;
     }
 
-    public async Task<List<double>> CalculateDistancesBatchAsync(List<(double lat1, double lon1, double lat2, double lon2)> points, GeoUnit unit = GeoUnit.Kilometers)
+    public async Task<List<double>> CalculateDistancesBatchAsync(List<(double lat1, double lon1, double lat2, double lon2)> points, GeoUnit unit = GeoUnit.Kilometers, CancellationToken cancellationToken = default)
     {
         var results = new List<double>();
         foreach (var (lat1, lon1, lat2, lon2) in points)
         {
-            var distance = await CalculateDistanceAsync(lat1, lon1, lat2, lon2, unit);
+            cancellationToken.ThrowIfCancellationRequested();
+            var distance = await CalculateDistanceAsync(lat1, lon1, lat2, lon2, unit, cancellationToken);
             results.Add(distance);
         }
         return results;
     }
 
-    public async Task<List<GeoResult>> FindWithinRadiusBatchAsync(double lat, double lon, double radius, List<(double lat, double lon)> points, GeoUnit unit = GeoUnit.Kilometers)
+    public async Task<List<GeoResult>> FindWithinRadiusBatchAsync(double lat, double lon, double radius, List<(double lat, double lon)> points, GeoUnit unit = GeoUnit.Kilometers, CancellationToken cancellationToken = default)
     {
         try
         {
+            cancellationToken.ThrowIfCancellationRequested();
             ValidateCoordinates(lat, lon);
             var point = GeoJson.Point(new GeoJson2DGeographicCoordinates(lon, lat));
             var radiusInMeters = radius * (unit == GeoUnit.Kilometers ? 1000 : 1609.34);
@@ -84,7 +93,7 @@ public class MongoGeoDistanceCalculator<T> : IGeoDistanceCalculator where T : cl
                 point,
                 maxDistance: radiusInMeters);
 
-            var results = await _collection.Find(filter).ToListAsync();
+            var results = await _collection.Find(filter).ToListAsync(cancellationToken);
 
             return results.Select(r => new GeoResult
             {
@@ -99,6 +108,11 @@ public class MongoGeoDistanceCalculator<T> : IGeoDistanceCalculator where T : cl
                 Longitude = r.Longitude
             }).ToList();
         }
+        catch (OperationCanceledException)
+        {
+            _logger.LogInformation("Operation canceled for finding points within radius ({Lat}, {Lon})", lat, lon);
+            throw;
+        }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error finding points within radius for ({Lat}, {Lon})", lat, lon);
@@ -106,15 +120,15 @@ public class MongoGeoDistanceCalculator<T> : IGeoDistanceCalculator where T : cl
         }
     }
 
-    public async Task<decimal> CalculateDeliveryFeeAsync(double lat1, double lon1, double lat2, double lon2, GeoUnit unit = GeoUnit.Kilometers)
+    public async Task<decimal> CalculateDeliveryFeeAsync(double lat1, double lon1, double lat2, double lon2, GeoUnit unit = GeoUnit.Kilometers, CancellationToken cancellationToken = default)
     {
-        var distance = await CalculateDistanceAsync(lat1, lon1, lat2, lon2, unit);
+        var distance = await CalculateDistanceAsync(lat1, lon1, lat2, lon2, unit, cancellationToken);
         return (decimal)distance * 0.5m;
     }
 
-    public async Task<TimeSpan> CalculateETAAsync(double lat1, double lon1, double lat2, double lon2, double averageSpeedKmH = 30, GeoUnit unit = GeoUnit.Kilometers)
+    public async Task<TimeSpan> CalculateETAAsync(double lat1, double lon1, double lat2, double lon2, double averageSpeedKmH = 30, GeoUnit unit = GeoUnit.Kilometers, CancellationToken cancellationToken = default)
     {
-        var distance = await CalculateDistanceAsync(lat1, lon1, lat2, lon2, unit);
+        var distance = await CalculateDistanceAsync(lat1, lon1, lat2, lon2, unit, cancellationToken);
         var hours = distance / averageSpeedKmH;
         return TimeSpan.FromHours(hours);
     }
