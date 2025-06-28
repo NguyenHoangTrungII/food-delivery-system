@@ -1,0 +1,55 @@
+version: '3.8'
+services:
+  osrm-backend:
+    image: ghcr.io/project-osrm/osrm-backend:latest
+    volumes:
+      - ../infra-data/osm:/data
+    environment:
+      - OSRM_ALGORITHM=mld
+      - STXXL_MEMORY=4096
+    command: osrm-routed --algorithm mld /data/hcm.osrm
+
+    # command: >
+    #   sh -c "
+    #   osrm-extract -p /opt/car.lua /data/hcm.osm.pbf &&
+    #   osrm-partition /data/hcm.osrm &&
+    #   osrm-customize /data/hcm.osrm &&
+    #   osrm-routed --algorithm ${OSRM_ALGORITHM} /data/hcm.osrm"
+    ports:
+      - "5000:5000"
+    # restart: unless-stopped
+    networks:
+      - food-delivery-network
+
+  redis:
+    image: redis:7.0-alpine
+    volumes:
+      - ../infra-data/redis:/data
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+    networks:
+      - food-delivery-network
+
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    volumes:
+      - ../infra-data/rabbitmq:/var/lib/rabbitmq
+    ports:
+      - "5672:5672" # AMQP
+      - "15672:15672" # Management UI
+    restart: unless-stopped
+    networks:
+      - food-delivery-network
+
+networks:
+  food-delivery-network:
+    driver: bridge
+
+volumes:
+  osrm-data:
+  redis-data:
+  rabbitmq-data:

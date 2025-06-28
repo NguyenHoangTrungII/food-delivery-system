@@ -13,6 +13,8 @@ public class Restaurant :  IGeoEntity
     public double Latitude { get; set; }
     public double Longitude { get; set; }
     public double? Distance { get; set; }
+    //public Point Geom { get; set; } // Thêm property
+
     //public Point Geom { get; set; } 
 
 }

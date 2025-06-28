@@ -111,4 +111,7 @@ public class GenericRepository : IGenericRepository
         return await _dbContext.Set<T>().Where(predicate).ToListAsync(cancellationToken);
     }
 
+
+
+
 }

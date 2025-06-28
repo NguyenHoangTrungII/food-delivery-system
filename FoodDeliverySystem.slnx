@@ -1,0 +1,46 @@
+<Solution>
+  <Folder Name="/src/" />
+  <Folder Name="/src/ApiGateway/">
+    <Project Path="src/ApiGateway/FoodDelivery.ApiGateway/FoodDelivery.ApiGateway.csproj" />
+  </Folder>
+  <Folder Name="/src/Services/" />
+  <Folder Name="/src/Services/AuthService/">
+    <Project Path="src/Services/AuthService/AuthService.API/AuthService.API.csproj" />
+    <Project Path="src/Services/AuthService/AuthService.Application/AuthService.Application.csproj" />
+    <Project Path="src/Services/AuthService/AuthService.Domain/AuthService.Domain.csproj" />
+    <Project Path="src/Services/AuthService/AuthService.Infrastructure/AuthService.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/src/Services/RestaurantService/">
+    <Project Path="src/Services/RestaurantService/RestaurantService.Application/RestaurantService.Application.csproj" />
+    <Project Path="src/Services/RestaurantService/RestaurantService.Domain/RestaurantService.Domain.csproj" />
+    <Project Path="src/Services/RestaurantService/RestaurantService.Infrastructure/RestaurantService.Infrastructure.csproj" />
+    <Project Path="src/Services/RestaurantService/RestaurantService.WebAPI/RestaurantService.API.csproj" />
+  </Folder>
+  <Folder Name="/src/Services/UserProfileService/">
+    <Project Path="src/Services/UserProfileService/UserProfileService.API/UserProfileService.API.csproj" />
+    <Project Path="src/Services/UserProfileService/UserProfileService.Application/UserProfileService.Application.csproj" />
+    <Project Path="src/Services/UserProfileService/UserProfileService.Domain/UserProfileService.Domain.csproj" />
+    <Project Path="src/Services/UserProfileService/UserProfileService.Infrastructure/UserProfileService.Infrastructure.csproj" />
+    <Project Path="src/Services/UserProfileService/UserProfileService.Presentation/UserProfileService.Presentation.csproj" />
+  </Folder>
+  <Folder Name="/src/Shared/">
+    <Project Path="src/Shared/FoodDeliverySystem.Common/FoodDeliverySystem.Common.csproj" />
+    <Project Path="src/Shared/FoodDeliverySystem.DAL/FoodDeliverySystem.DAL.csproj" />
+  </Folder>
+
+<Folder Name="/deployment/" />
+  <Folder Name="/deployment/docker-compose/">
+    <File Path="deployment/docker-compose/docker-compose.yml" />
+  </Folder>
+
+  <Folder Name="/deployment/infra-data/osm/">
+    <File Path="deployment/infra-data/osm/vietnam-latest.osm.pbf" />
+  </Folder>
+
+  <Folder Name="/deployment/infra-data/redis/" />
+
+  <Folder Name="/deployment/infra-data/rabbitmq/" />
+
+
+
+</Solution>

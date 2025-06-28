@@ -23,8 +23,8 @@ namespace RestaurantService.Infrastructure.Migrations
                     Address = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     Latitude = table.Column<double>(type: "double precision", nullable: false, computedColumnSql: "ST_Y(geom)", stored: true),
                     Longitude = table.Column<double>(type: "double precision", nullable: false, computedColumnSql: "ST_X(geom)", stored: true),
-                    Distance = table.Column<double>(type: "double precision", nullable: true),
-                    geom = table.Column<Point>(type: "geography (Point, 4326)", nullable: true)
+                    Distance = table.Column<double>(type: "double precision", nullable: true, defaultValue: 0.0),
+                    geom = table.Column<Point>(type: "geometry  (Point, 4326)", nullable: true)
                 },
                 constraints: table =>
                 {

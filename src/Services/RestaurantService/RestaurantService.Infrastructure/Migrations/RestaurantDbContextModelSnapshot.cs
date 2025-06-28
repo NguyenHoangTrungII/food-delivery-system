@@ -34,7 +34,9 @@ namespace RestaurantService.Infrastructure.Migrations
                         .HasColumnType("character varying(255)");
 
                     b.Property<double?>("Distance")
-                        .HasColumnType("double precision");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("double precision")
+                        .HasDefaultValue(0.0);
 
                     b.Property<double>("Latitude")
                         .ValueGeneratedOnAddOrUpdate()
@@ -52,7 +54,7 @@ namespace RestaurantService.Infrastructure.Migrations
                         .HasColumnType("character varying(255)");
 
                     b.Property<Point>("geom")
-                        .HasColumnType("geography (Point, 4326)");
+                        .HasColumnType("geometry  (Point, 4326)");
 
                     b.HasKey("Id");
 

@@ -25,6 +25,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.NetTopologySuite" Version="9.0.4" />
     <PackageReference Include="Polly" Version="8.5.2" />
+    <PackageReference Include="prometheus-net" Version="8.2.1" />
 	<PackageReference Include="RabbitMQ.Client" Version="6.8.0" />
 	<PackageReference Include="StackExchange.Redis" Version="2.8.37" />
     <PackageReference Include="Sustainsys.Saml2" Version="2.11.0" />
@@ -51,6 +52,11 @@
 
 	<ItemGroup>
 		<Compile Include="ApiResponse/Factories/ResponseFactoryExtensions.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Geo\Implementations\DistanceCalculators\" />
+	  <Folder Include="Geo\Implementations\MapApiClients\" />
 	</ItemGroup>
 
 </Project>

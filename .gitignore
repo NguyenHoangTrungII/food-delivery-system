@@ -88,3 +88,16 @@ docker-compose.override.yml
 # Rider local history
 .localhistory/
 
+#osm
+*.osm.*
+*.osrm.pbf
+*.osrm.*
+
+# Infrastructure data
+deployment/infra-data/osrm/
+deployment/infra-data/redis/
+deployment/infra-data/rabbitmq/
+
+#
+appsettings.Development.json
+

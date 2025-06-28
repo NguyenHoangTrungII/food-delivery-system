@@ -12,17 +12,29 @@ using Microsoft.EntityFrameworkCore;
 using System.IdentityModel.Tokens.Jwt;
 using RestaurantService.Infrastructure.Configurations;
 using UserProfileService.Domain.SeedWork;
-using RestaurantService.Infrastructure.Geo;
+//using RestaurantService.Infrastructure.Geo;
 using FoodDeliverySystem.Common.Geo.Extensions;
+using static FoodDeliverySystem.Common.Geo.Extensions.ServiceCollectionExtensions;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using FoodDeliverySystem.Common.Geo.Configurations;
+using FoodDeliverySystem.Common.Geo.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Configuration
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddJsonFile("appsettings.Development.json", optional: true, reloadOnChange: true)
+    .AddEnvironmentVariables();
 
 // Add services to the container.
 builder.Services.AddControllers();
 
 // Add DbContext
-builder.Services.UseDAL<RestaurantDbContext>(builder.Configuration);
+//builder.Services.UseDAL<RestaurantDbContext>(builder.Configuration);
+builder.Services.UseDAL<RestaurantDbContext>(builder.Configuration, "Database:Services");
+
 
 
 
@@ -53,14 +65,38 @@ builder.Services.AddCommonServices(builder.Configuration);
 builder.Services.AddCommonMediatRAndValidation(typeof(Program).Assembly);
 
 // Add PostGIS GeoDatabaseProvider
-builder.Services.AddSingleton<FoodDeliverySystem.Common.Geo.Interfaces.IGeoDatabaseProvider>(sp =>
-    new PostgisGeoDatabaseProvider(builder.Configuration["PostGIS:ConnectionString"]));
+//builder.Services.AddSingleton<FoodDeliverySystem.Common.Geo.Interfaces.IGeoDatabaseProvider>(sp =>
+//    new PostgisGeoDatabaseProvider(builder.Configuration["PostGIS:ConnectionString"]));
 
-// Add GeoDistance with PostGIS engine
-builder.Services.AddGeoDistance(
-    builder.Configuration,
-    "PostGIS",
-    postgisTableName: builder.Configuration["PostGIS:TableName"] ?? "restaurants");
+//Add GeoDistance with PostGIS engine
+//builder.Services.AddGeoDistance(
+//    builder.Configuration,
+//    "PostGIS",
+//   postgisTableName: builder.Configuration["PostGIS:TableName"] ?? "restaurants");
+
+builder.Services.AddGeoDistance(options =>
+{
+
+    var restaurantConnStr = builder.Configuration.GetSection("Database:Services:Restaurant:ConnectionString").Value;
+    options.PostGIS = new GeoOptions.PostGISConfig
+    {
+        ConnectionString = restaurantConnStr,
+        TableName = "restaurants"
+    };
+
+    var configuration = builder.Configuration.GetSection("Geo");
+    options.Engine = new GeoOptions.GeoEngineConfig
+    {
+        Engine = configuration["Engine"] ?? "OSRM" // Mặc định OSRM
+    };
+
+    options.OSRM = new GeoOptions.OSRMConfig
+    {
+        Url = configuration["OSRM:Url"] ?? "http://localhost:5000/",
+        Profile = configuration["OSRM:Profile"] ?? "driving",
+        DataPath = configuration["OSRM:DataPath"] // Đường dẫn đến file OSM nếu cần
+    };
+});
 
 
 // Add Authentication with JWT
@@ -104,13 +140,21 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+builder.Services.AddHttpClient<WeatherService>(client =>
+    client.BaseAddress = new Uri("https://api.openweathermap.org/data/2.5/"))
+.AddTypedClient((httpClient, sp) => new WeatherService(
+    httpClient,
+    builder.Configuration["Weather:ApiKey"], // 👈 Hoặc sp.GetRequiredService<IConfiguration>()
+    sp.GetRequiredService<ILogger<WeatherService>>()));
+
+
 // Add Authorization
 builder.Services.AddAuthorization();
 
 // Add Swagger
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "UserProfile API", Version = "v1" });
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Restaurant API", Version = "v1" });
 
     // Add JWT Authentication to Swagger
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -147,8 +191,8 @@ app.UseHttpsRedirection();
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "AuthService API V1");
-    c.RoutePrefix = string.Empty; // Truy cập Swagger tại root (http://localhost:5002/)
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Restaurant  API V1");
+    c.RoutePrefix = string.Empty; 
 });
 
 

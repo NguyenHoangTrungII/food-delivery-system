@@ -5,5 +5,6 @@ public class GeoResult
     public string Id { get; set; } = string.Empty;
     public double Latitude { get; set; }
     public double Longitude { get; set; }
-    public double? Distance { get; set; } = 0;
+    public double? Distance { get; set; }
+    public string Address { get; set; }
 }
